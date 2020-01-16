@@ -53,6 +53,7 @@ import com.android.customization.model.theme.ThemeBundle;
 import com.android.customization.model.theme.ThemeBundle.PreviewInfo;
 import com.android.customization.model.theme.ThemeManager;
 import com.android.customization.model.theme.custom.CustomTheme;
+import com.android.customization.model.theme.custom.TwoTrianglesDrawable;
 import com.android.customization.module.ThemesUserEventLogger;
 import com.android.customization.picker.BasePreviewAdapter;
 import com.android.customization.picker.TimeTicker;
@@ -390,13 +391,15 @@ public class ThemeFragment extends ToolbarFragment {
 
             addPage(new ThemeCoverPage(activity, theme.getTitle(),
                     previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
-                    previewInfo.icons, previewInfo.headlineFontFamily,
-                    previewInfo.shapeDrawable, previewInfo.shapeAppIcons, editClickListener,
+                    previewInfo.resolveSecondaryPrimaryColor(res), previewInfo.icons,
+                    previewInfo.headlineFontFamily, previewInfo.shapeDrawable,
+                    previewInfo.shapeAppIcons, editClickListener,
                     mColorButtonIds, mColorTileIds, mColorTileIconIds, mShapeIconIds,
                     wallpaperListener, coverCardLayoutListener));
             addPage(new ThemePreviewPage(activity, R.string.preview_name_font, R.drawable.ic_font,
                     R.layout.preview_card_font_content,
-                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                    previewInfo.resolveSecondaryPrimaryColor(res)) {
                 @Override
                 protected void bindBody(boolean forceRebind) {
                     TextView title = card.findViewById(R.id.font_card_title);
@@ -412,7 +415,8 @@ public class ThemeFragment extends ToolbarFragment {
             if (previewInfo.icons.size() >= mIconIds.length) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_icon,
                         R.drawable.ic_wifi_24px, R.layout.preview_card_icon_content,
-                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                    previewInfo.resolveSecondaryPrimaryColor(res)) {
                     @Override
                     protected void bindBody(boolean forceRebind) {
                         for (int i = 0; i < mIconIds.length && i < previewInfo.icons.size(); i++) {
@@ -425,7 +429,8 @@ public class ThemeFragment extends ToolbarFragment {
             }
             addPage(new ThemePreviewPage(activity, R.string.preview_name_color_new,
                     R.drawable.ic_colorize_24px, R.layout.preview_card_color_content,
-                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                    previewInfo.resolveSecondaryPrimaryColor(res)) {
                 @Override
                 protected void bindBody(boolean forceRebind) {
                     int controlGreyColor = res.getColor(R.color.control_grey);
@@ -476,11 +481,13 @@ public class ThemeFragment extends ToolbarFragment {
             });
             addPage(new ThemePreviewPage(activity, R.string.preview_name_primary,
                     R.drawable.ic_colorize_24px, R.layout.preview_card_primary_content,
-                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                    previewInfo.resolveSecondaryPrimaryColor(res)) {
                 @Override
                 protected void bindBody(boolean forceRebind) {
                     View v = card.findViewById(R.id.preview_primary);
-                    v.setBackgroundColor(primaryColor);
+                    v.setBackground(
+                            new TwoTrianglesDrawable(primaryColor, secondaryPrimaryColor, false));
 
                     int controlGreyColor = res.getColor(R.color.control_grey);
                     ColorStateList tintList = new ColorStateList(
@@ -517,7 +524,8 @@ public class ThemeFragment extends ToolbarFragment {
             if (!previewInfo.shapeAppIcons.isEmpty()) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_shape,
                         R.drawable.ic_shapes_24px, R.layout.preview_card_shape_content,
-                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                        previewInfo.resolveSecondaryPrimaryColor(res)) {
                     @Override
                     protected void bindBody(boolean forceRebind) {
                         for (int i = 0; i < mShapeIconIds.length
@@ -532,7 +540,8 @@ public class ThemeFragment extends ToolbarFragment {
             if (previewInfo.wallpaperAsset != null) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_wallpaper,
                         R.drawable.ic_nav_wallpaper, R.layout.preview_card_wallpaper_content,
-                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res)) {
+                        previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+                        previewInfo.resolveSecondaryPrimaryColor(res)) {
 
                     private final WallpaperPreviewLayoutListener mListener =
                             new WallpaperPreviewLayoutListener(theme, previewInfo, null, false);
