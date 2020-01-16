@@ -21,6 +21,7 @@
     android:padding="8dp">
 
     <ImageView
+        android:id="@+id/option_second_primary_tile"
         android:layout_width="@dimen/component_color_chip_size_bg"
         android:layout_height="@dimen/component_color_chip_size_bg"
         android:layout_gravity="center"
