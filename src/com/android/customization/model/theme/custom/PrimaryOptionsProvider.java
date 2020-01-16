@@ -72,21 +72,58 @@ public class PrimaryOptionsProvider extends ThemeComponentOptionProvider<Primary
 
     @Override
     protected void loadOptions() {
+        Configuration configuration = mContext.getResources().getConfiguration();
+        boolean nightMode = (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES;
+        Resources system = Resources.getSystem();
         int accentColor = mCustomThemeManager.resolveAccentColor(mContext.getResources());
-        int defaultPrimaryColor = getSystemDefaultPrimary();
-        addDefault();
+        int defaultPrimaryColorLight = system.getColor(
+                system.getIdentifier(ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME, "color",
+                ResourceConstants.ANDROID_PACKAGE), null);
+        int defaultPrimaryColorDark = system.getColor(
+                system.getIdentifier(ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME, "color",
+                ResourceConstants.ANDROID_PACKAGE), null);
+        addDefault(defaultPrimaryColorLight, defaultPrimaryColorDark, nightMode);
+        Configuration lightConf = new Configuration(configuration);
+        Configuration darkConf = new Configuration(configuration);
+        lightConf.uiMode = Configuration.UI_MODE_NIGHT_NO
+                & (configuration.uiMode & ~Configuration.UI_MODE_NIGHT_MASK);
+        darkConf.uiMode = Configuration.UI_MODE_NIGHT_YES
+                & (configuration.uiMode & ~Configuration.UI_MODE_NIGHT_MASK);
+        Context lightContext = mContext.createConfigurationContext(lightConf);
+        Context darkContext = mContext.createConfigurationContext(darkConf);
         for (String overlayPackage : mOverlayPackages) {
             try {
-                Resources overlayRes = getOverlayResources(overlayPackage);
-                int primaryColor = overlayRes.getColor(
-                        overlayRes.getIdentifier(PRIMARY_COLOR_NAME, "color", overlayPackage),
-                        null);
-                if (primaryColor == defaultPrimaryColor) {
-                    continue;
-                }
+                Resources overlayResLight = getModifiedOverlayResources(lightContext, overlayPackage);
+                Resources overlayResDark = getModifiedOverlayResources(darkContext, overlayPackage);
+                Configuration llconf = lightContext.getResources().getConfiguration();
+                Log.e(TAG, "LIGHT?: " + (llconf.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES ? "DARK" : "LIGHT");
+                Configuration dlconf = darkContext.getResources().getConfiguration();
+                Log.e(TAG, "DARK?: " + (dlconf.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES ? "DARK" : "LIGHT");
+                int primaryColorLightIdentifier = overlayResLight.getIdentifier(
+                        ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME,
+                        "color", overlayPackage);
+                int primaryColorDarkIdentifier = overlayResDark.getIdentifier(
+                        ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME,
+                        "color", overlayPackage);
+                int primaryColorLight = primaryColorLightIdentifier != 0
+                        ? overlayResLight.getColor(primaryColorLightIdentifier, null)
+                        : defaultPrimaryColorLight;
+                int primaryColorDark = primaryColorDarkIdentifier != 0
+                        ? overlayResDark.getColor(primaryColorDarkIdentifier, null)
+                        : defaultPrimaryColorDark;
                 PackageManager pm = mContext.getPackageManager();
                 String label = pm.getApplicationInfo(overlayPackage, 0).loadLabel(pm).toString();
-                PrimaryOption option = new PrimaryOption(overlayPackage, label, primaryColor, accentColor);
+                PrimaryOption option = null;
+                if (nightMode) {
+                    option = new PrimaryOption(overlayPackage, label,
+                            primaryColorDark, primaryColorLight, accentColor);
+                } else {
+                    option = new PrimaryOption(overlayPackage, label,
+                            primaryColorLight, primaryColorDark, accentColor);
+                }
                 mOptions.add(option);
             } catch (NameNotFoundException | NotFoundException e) {
                 Log.w(TAG, String.format("Couldn't load primary overlay %s, will skip it",
@@ -95,23 +132,22 @@ public class PrimaryOptionsProvider extends ThemeComponentOptionProvider<Primary
         }
     }
 
-    int getSystemDefaultPrimary() {
-        Configuration configuration = mContext.getResources().getConfiguration();
-        boolean nightMode = (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                    == Configuration.UI_MODE_NIGHT_YES ? true : false;
-        Resources system = Resources.getSystem();
-        int colorPrimary = system.getColor(
-                system.getIdentifier(nightMode ? ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME : ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME, "color",
-                ResourceConstants.ANDROID_PACKAGE), null);
-        return colorPrimary;
+    private void addDefault(int primaryColorLight, int primaryColorDark, boolean night) {
+        int accentColor = mCustomThemeManager.resolveAccentColor(mContext.getResources());
+        PrimaryOption option;
+        if (night) {
+            option = new PrimaryOption(null,
+                    mContext.getString(R.string.default_theme_title), primaryColorDark,
+                    primaryColorLight, accentColor);
+        } else {
+            option = new PrimaryOption(null,
+                    mContext.getString(R.string.default_theme_title), primaryColorLight,
+                    primaryColorDark, accentColor);
+        }
+        mOptions.add(option);
     }
 
-    private void addDefault() {
-        Resources system = Resources.getSystem();
-        int accentColor = mCustomThemeManager.resolveAccentColor(mContext.getResources());
-        int primaryColor = getSystemDefaultPrimary();
-        PrimaryOption option = new PrimaryOption(null,
-                mContext.getString(R.string.default_theme_title), primaryColor, accentColor);
-        mOptions.add(option);
+    protected Resources getModifiedOverlayResources(Context context, String overlayPackage) throws NameNotFoundException {
+        return context.getPackageManager().getResourcesForApplication(overlayPackage);
     }
 }
