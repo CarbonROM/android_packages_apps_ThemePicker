@@ -20,5 +20,5 @@
     <size
         android:width="@dimen/component_color_chip_size"
         android:height="@dimen/component_color_chip_size" />
-    <solid android:color="?android:attr/textColorSecondary" />
+    <solid android:color="@android:color/black" />
 </shape>
