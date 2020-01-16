@@ -424,28 +424,39 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         };
 
         @ColorInt private int mPrimaryColor;
+        @ColorInt private int mSecondaryPrimaryColor;
         @ColorInt private int mAccentColor;
 
         private String mLabel;
 
-        PrimaryOption(String packageName, String label, @ColorInt int primaryColor, @ColorInt int accentColor) {
+        PrimaryOption(String packageName, String label, @ColorInt int primaryColor,
+                @ColorInt int secondaryPrimaryColor, @ColorInt int accentColor) {
             addOverlayPackage(OVERLAY_CATEGORY_PRIMARY, packageName);
             mLabel = label;
             mPrimaryColor = primaryColor;
+            mSecondaryPrimaryColor = secondaryPrimaryColor;
             mAccentColor = accentColor;
         }
 
         @Override
         public void bindThumbnailTile(View view) {
-            @ColorInt int color = resolveColor(view.getResources());
-            ((ImageView) view.findViewById(R.id.option_tile)).setImageTintList(
-                    ColorStateList.valueOf(color));
-            view.setContentDescription(mLabel);
-        }
+            Drawable circle = view.getResources().getDrawable(R.drawable.color_chip, null)
+                    .getConstantState().newDrawable().mutate();
+            Drawable circleBG = view.getResources().getDrawable(R.drawable.color_chip, null)
+                    .getConstantState().newDrawable().mutate();
+            ImageView primaryCircle =
+                    (ImageView) view.findViewById(R.id.option_tile);
+            ImageView primarySecondaryCircle =
+                    (ImageView) view.findViewById(R.id.option_second_primary_tile);
 
-        @ColorInt
-        private int resolveColor(Resources res) {
-            return mPrimaryColor;
+            primaryCircle.setImageDrawable(circle);
+            primarySecondaryCircle.setImageDrawable(circleBG);
+
+            primaryCircle.setImageTintList(
+                    ColorStateList.valueOf(mPrimaryColor));
+            primarySecondaryCircle.setImageTintList(
+                    ColorStateList.valueOf(mSecondaryPrimaryColor));
+            view.setContentDescription(mLabel);
         }
 
         @Override
@@ -470,9 +481,8 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
                         R.layout.preview_card_primary_content, cardBody, true);
             }
             Resources res = container.getResources();
-            @ColorInt int primaryColor = resolveColor(res);
             View v = container.findViewById(R.id.preview_primary);
-            v.setBackgroundColor(primaryColor);
+            v.setBackground(new TwoTrianglesDrawable(mPrimaryColor, mSecondaryPrimaryColor));
 
             @ColorInt int controlGreyColor = res.getColor(R.color.control_grey);
             ColorStateList tintList = new ColorStateList(
@@ -509,6 +519,7 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         @Override
         public Builder buildStep(Builder builder) {
             builder.setColorPrimary(mPrimaryColor);
+            builder.setColorSecondaryPrimary(mSecondaryPrimaryColor);
             return super.buildStep(builder);
         }
     }
