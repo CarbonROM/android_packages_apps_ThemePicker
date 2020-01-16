@@ -3,6 +3,7 @@ package com.android.customization.picker.theme;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -45,11 +46,14 @@ abstract class ThemePreviewPage extends PreviewPage {
     final int accentColor;
     @ColorInt
     final int primaryColor;
+    @ColorInt
+    final int secondaryPrimaryColor;
     protected final LayoutInflater inflater;
 
     public ThemePreviewPage(Context context, @StringRes int titleResId,
             @DrawableRes int iconSrc, @LayoutRes int contentLayoutRes,
-            @ColorInt int accentColor,@ColorInt int primaryColor) {
+            @ColorInt int accentColor,@ColorInt int primaryColor,
+            @ColorInt int secondaryPrimaryColor) {
         super(null);
         this.nameResId = titleResId;
         if (iconSrc != Resources.ID_NULL) {
@@ -62,6 +66,7 @@ abstract class ThemePreviewPage extends PreviewPage {
         this.contentLayoutRes = contentLayoutRes;
         this.accentColor = accentColor;
         this.primaryColor = primaryColor;
+        this.secondaryPrimaryColor = secondaryPrimaryColor;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -109,6 +114,7 @@ abstract class ThemePreviewPage extends PreviewPage {
         private final ColorStateList mTintList;
 
         public ThemeCoverPage(Context context, String title, int accentColor, int primaryColor,
+                int secondaryPrimaryColor,
                 List<Drawable> icons,
                 Typeface headlineFont,
                 Drawable shapeDrawable,
@@ -116,7 +122,8 @@ abstract class ThemePreviewPage extends PreviewPage {
                 OnClickListener editClickListener,
                 int[] colorButtonIds, int[] colorTileIds, int[][] colorTileIconIds,
                 int[] shapeIconIds, OnLayoutChangeListener... wallpaperListeners) {
-            super(context, 0, 0, R.layout.preview_card_cover_content, accentColor, primaryColor);
+            super(context, 0, 0, R.layout.preview_card_cover_content, accentColor, primaryColor,
+                secondaryPrimaryColor);
             mRes = context.getResources();
             mTitle = title;
             mHeadlineFont = headlineFont;
