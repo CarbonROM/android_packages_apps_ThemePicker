@@ -95,8 +95,9 @@ public class ShapeOptionsProvider extends ThemeComponentOptionProvider<ShapeOpti
     private ShapeDrawable createShapeDrawable(Path path) {
         PathShape shape = new PathShape(path, PATH_SIZE, PATH_SIZE);
         ShapeDrawable shapeDrawable = new ShapeDrawable(shape);
-        shapeDrawable.setIntrinsicHeight(mThumbSize);
-        shapeDrawable.setIntrinsicWidth(mThumbSize);
+        // TEST
+        // shapeDrawable.setIntrinsicHeight(mThumbSize);
+        // shapeDrawable.setIntrinsicWidth(mThumbSize);
         return shapeDrawable;
     }
 
