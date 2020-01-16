@@ -64,7 +64,7 @@ public class PrimaryOptionsProvider extends ThemeComponentOptionProvider<Primary
         mCustomThemeManager = customThemeManager;
         // System color is set with a static overlay for android.theme category, so let's try to
         // find that first, and if that's not present, we'll default to System resources.
-        // (see #addDefault())
+        // (see #addDefaults())
         List<String> themePackages = manager.getOverlayPackagesForCategory(
                 OVERLAY_CATEGORY_ANDROID_THEME, UserHandle.myUserId(), ANDROID_PACKAGE);
         mDefaultThemePackage = themePackages.isEmpty() ? null : themePackages.get(0);
@@ -73,17 +73,13 @@ public class PrimaryOptionsProvider extends ThemeComponentOptionProvider<Primary
     @Override
     protected void loadOptions() {
         int accentColor = mCustomThemeManager.resolveAccentColor(mContext.getResources());
-        int defaultPrimaryColor = getSystemDefaultPrimary();
-        addDefault();
+        addDefaults();
         for (String overlayPackage : mOverlayPackages) {
             try {
                 Resources overlayRes = getOverlayResources(overlayPackage);
                 int primaryColor = overlayRes.getColor(
                         overlayRes.getIdentifier(PRIMARY_COLOR_NAME, "color", overlayPackage),
                         null);
-                if (primaryColor == defaultPrimaryColor) {
-                    continue;
-                }
                 PackageManager pm = mContext.getPackageManager();
                 String label = pm.getApplicationInfo(overlayPackage, 0).loadLabel(pm).toString();
                 PrimaryOption option = new PrimaryOption(overlayPackage, label, primaryColor, accentColor);
@@ -95,22 +91,19 @@ public class PrimaryOptionsProvider extends ThemeComponentOptionProvider<Primary
         }
     }
 
-    int getSystemDefaultPrimary() {
-        Configuration configuration = mContext.getResources().getConfiguration();
-        boolean nightMode = (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                    == Configuration.UI_MODE_NIGHT_YES ? true : false;
-        Resources system = Resources.getSystem();
-        int colorPrimary = system.getColor(
-                system.getIdentifier(nightMode ? ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME : ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME, "color",
-                ResourceConstants.ANDROID_PACKAGE), null);
-        return colorPrimary;
-    }
-
-    private void addDefault() {
+    private void addDefaults() {
         Resources system = Resources.getSystem();
         int accentColor = mCustomThemeManager.resolveAccentColor(mContext.getResources());
-        int primaryColor = getSystemDefaultPrimary();
+        int primaryColor = system.getColor(
+                system.getIdentifier(ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME, "color",
+                ResourceConstants.ANDROID_PACKAGE), null);
         PrimaryOption option = new PrimaryOption(null,
+                mContext.getString(R.string.default_theme_title), primaryColor, accentColor);
+        mOptions.add(option);
+        primaryColor = system.getColor(
+                system.getIdentifier(ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME, "color",
+                ResourceConstants.ANDROID_PACKAGE), null);
+        option = new PrimaryOption(null,
                 mContext.getString(R.string.default_theme_title), primaryColor, accentColor);
         mOptions.add(option);
     }
