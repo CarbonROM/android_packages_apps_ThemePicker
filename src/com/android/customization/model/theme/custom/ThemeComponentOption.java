@@ -423,16 +423,22 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
                 R.id.preview_toggle_selected
         };
 
+        public static int LIGHT = 0;
+        public static int DARK = 1;
+
         @ColorInt private int mPrimaryColor;
         @ColorInt private int mAccentColor;
+        private int mType;
 
         private String mLabel;
 
-        PrimaryOption(String packageName, String label, @ColorInt int primaryColor, @ColorInt int accentColor) {
+        PrimaryOption(String packageName, String label, @ColorInt int primaryColor,
+                @ColorInt int accentColor, int type) {
             addOverlayPackage(OVERLAY_CATEGORY_PRIMARY, packageName);
             mLabel = label;
             mPrimaryColor = primaryColor;
             mAccentColor = accentColor;
+            mType = type;
         }
 
         @Override
