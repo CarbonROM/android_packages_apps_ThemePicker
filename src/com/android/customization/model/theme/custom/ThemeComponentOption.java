@@ -35,6 +35,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -424,28 +426,51 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         };
 
         @ColorInt private int mPrimaryColor;
+        @ColorInt private int mSecondaryPrimaryColor;
         @ColorInt private int mAccentColor;
+
 
         private String mLabel;
 
-        PrimaryOption(String packageName, String label, @ColorInt int primaryColor, @ColorInt int accentColor) {
+        PrimaryOption(String packageName, String label, @ColorInt int primaryColor,
+                @ColorInt int secondaryPrimaryColor, @ColorInt int accentColor) {
             addOverlayPackage(OVERLAY_CATEGORY_PRIMARY, packageName);
             mLabel = label;
             mPrimaryColor = primaryColor;
+            mSecondaryPrimaryColor = secondaryPrimaryColor;
             mAccentColor = accentColor;
         }
 
         @Override
         public void bindThumbnailTile(View view) {
-            @ColorInt int color = resolveColor(view.getResources());
-            ((ImageView) view.findViewById(R.id.option_tile)).setImageTintList(
-                    ColorStateList.valueOf(color));
-            view.setContentDescription(mLabel);
-        }
+            ImageView thumb = view.findViewById(R.id.option_primary_color_tile);
+            Resources res = view.getResources();
+            Theme theme = view.getContext().getTheme();
+            int borderWidth = 2 * res.getDimensionPixelSize(R.dimen.option_border_width);
+            int chipSize = res.getDimensionPixelSize(R.dimen.option_tile_width);
 
-        @ColorInt
-        private int resolveColor(Resources res) {
-            return mPrimaryColor;
+            ShapeDrawable foreground =
+                    new TwoTrianglesDrawable(mPrimaryColor, mSecondaryPrimaryColor, true);
+            foreground.setIntrinsicHeight(chipSize);
+            foreground.setIntrinsicWidth(chipSize);
+            StateListDrawable background = new StateListDrawable();
+            background.addState(new int[] {android.R.attr.state_activated},
+                    new ShapeDrawable(new OvalShape()));
+            background.addState(new int[] {-android.R.attr.state_activated},
+                    new ShapeDrawable(new OvalShape()));
+            background.addState(StateSet.WILD_CARD,
+                    new ShapeDrawable(new OvalShape()));
+            background.setTintList(res.getColorStateList(R.color.option_border_color, theme));
+
+            LayerDrawable colorChip = new LayerDrawable(new Drawable[]{background, foreground});
+            colorChip.setLayerGravity(0, Gravity.CENTER);
+            colorChip.setLayerGravity(1, Gravity.CENTER);
+
+            foreground.setIntrinsicHeight(background.getIntrinsicHeight() - borderWidth);
+            foreground.setIntrinsicWidth(background.getIntrinsicWidth() - borderWidth);
+
+            thumb.setImageDrawable(colorChip);
+            view.setContentDescription(mLabel);
         }
 
         @Override
@@ -470,9 +495,8 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
                         R.layout.preview_card_primary_content, cardBody, true);
             }
             Resources res = container.getResources();
-            @ColorInt int primaryColor = resolveColor(res);
             View v = container.findViewById(R.id.preview_primary);
-            v.setBackgroundColor(primaryColor);
+            v.setBackground(new TwoTrianglesDrawable(mPrimaryColor, mSecondaryPrimaryColor, false));
 
             @ColorInt int controlGreyColor = res.getColor(R.color.control_grey);
             ColorStateList tintList = new ColorStateList(
@@ -509,6 +533,7 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         @Override
         public Builder buildStep(Builder builder) {
             builder.setColorPrimary(mPrimaryColor);
+            builder.setColorSecondaryPrimary(mSecondaryPrimaryColor);
             return super.buildStep(builder);
         }
     }
