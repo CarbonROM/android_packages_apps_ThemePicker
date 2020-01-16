@@ -424,14 +424,17 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         };
 
         @ColorInt private int mPrimaryColor;
+        @ColorInt private int mOtherPrimaryColor;
         @ColorInt private int mAccentColor;
 
         private String mLabel;
 
-        PrimaryOption(String packageName, String label, @ColorInt int primaryColor, @ColorInt int accentColor) {
+        PrimaryOption(String packageName, String label, @ColorInt int primaryColor,
+                @ColorInt int otherPrimaryColor, @ColorInt int accentColor) {
             addOverlayPackage(OVERLAY_CATEGORY_PRIMARY, packageName);
             mLabel = label;
             mPrimaryColor = primaryColor;
+            mOtherPrimaryColor = otherPrimaryColor;
             mAccentColor = accentColor;
         }
 
@@ -441,11 +444,6 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
             ((ImageView) view.findViewById(R.id.option_tile)).setImageTintList(
                     ColorStateList.valueOf(color));
             view.setContentDescription(mLabel);
-        }
-
-        @ColorInt
-        private int resolveColor(Resources res) {
-            return mPrimaryColor;
         }
 
         @Override
@@ -470,9 +468,8 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
                         R.layout.preview_card_primary_content, cardBody, true);
             }
             Resources res = container.getResources();
-            @ColorInt int primaryColor = resolveColor(res);
             View v = container.findViewById(R.id.preview_primary);
-            v.setBackgroundColor(primaryColor);
+            v.setBackground(new TwoTrianglesDrawable(mPrimaryColor, mOtherPrimaryColor));
 
             @ColorInt int controlGreyColor = res.getColor(R.color.control_grey);
             ColorStateList tintList = new ColorStateList(
