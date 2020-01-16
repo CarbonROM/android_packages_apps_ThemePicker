@@ -20,5 +20,5 @@
         android:innerRadius="9dp"
         android:thickness="10dp"
         android:useLevel="false">
-    <solid android:color="?android:attr/textColorSecondary"/>
+    <solid android:color="@android:color/black"/>
 </shape>
