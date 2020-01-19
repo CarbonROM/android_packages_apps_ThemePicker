@@ -481,7 +481,10 @@ public class ThemeFragment extends ToolbarFragment {
                     }
                 });
             }
-            if (previewInfo.colorPrimary != -1 && previewInfo.colorSecondaryPrimary != -1) {
+            Log.e(TAG, theme.getTitle() + "COLORS: "
+                    + Integer.toString(previewInfo.colorPrimary) + " "
+                    + Integer.toString(previewInfo.colorSecondaryPrimary));
+            // if (previewInfo.colorPrimary != -1 && previewInfo.colorSecondaryPrimary != -1) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_primary,
                         R.drawable.ic_colorize_24px, R.layout.preview_card_primary_content,
                         previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
@@ -523,7 +526,7 @@ public class ThemeFragment extends ToolbarFragment {
                         // Disable seekbar
                         seekbar.setOnTouchListener((view, motionEvent) -> true);                    }
                 });
-            }
+            //}
             if (!previewInfo.shapeAppIcons.isEmpty()) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_shape,
                         R.drawable.ic_shapes_24px, R.layout.preview_card_shape_content,

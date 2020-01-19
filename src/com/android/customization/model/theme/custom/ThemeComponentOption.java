@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import android.util.Log;
 /**
  * Represents an option of a component of a custom Theme (for example, a possible color, or font,
  * shape, etc).
@@ -545,6 +546,7 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         public Builder buildStep(Builder builder) {
             builder.setColorPrimary(mPrimaryColor);
             builder.setColorSecondaryPrimary(mSecondaryPrimaryColor);
+            Log.e("PrimaryOptionBUNDLE", mPrimaryColor + " " + mSecondaryPrimaryColor);
             return super.buildStep(builder);
         }
     }
