@@ -545,6 +545,7 @@ public abstract class ThemeComponentOption implements CustomizationOption<ThemeC
         public Builder buildStep(Builder builder) {
             builder.setColorPrimary(mPrimaryColor);
             builder.setColorSecondaryPrimary(mSecondaryPrimaryColor);
+            Log.e("PrimaryOptionBUNDLE", mPrimaryColor + " " + mSecondaryPrimaryColor);
             return super.buildStep(builder);
         }
     }
