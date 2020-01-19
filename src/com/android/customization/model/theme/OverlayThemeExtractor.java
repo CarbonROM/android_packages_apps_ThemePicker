@@ -231,9 +231,11 @@ class OverlayThemeExtractor {
                 system.getIdentifier(ResourceConstants.PRIMARY_COLOR_DEFAULT_DARK_NAME, "color",
                 ResourceConstants.ANDROID_PACKAGE), null);
         if(nightMode) {
+            Log.e(TAG, "addSystemDefaultPrimary night :" + Integer.toString(defaultPrimaryColorDark) + " " + Integer.toString(defaultPrimaryColorLight));
             builder.setColorPrimary(defaultPrimaryColorDark);
             builder.setColorSecondaryPrimary(defaultPrimaryColorLight);
         } else {
+            Log.e(TAG, "addSystemDefaultPrimary light :" + Integer.toString(defaultPrimaryColorDark) + " " + Integer.toString(defaultPrimaryColorLight));
             builder.setColorPrimary(defaultPrimaryColorLight);
             builder.setColorSecondaryPrimary(defaultPrimaryColorDark);
         }
@@ -295,9 +297,13 @@ class OverlayThemeExtractor {
                 ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME,
                 "color", overlayPackage);
 
-        return primaryColorLightIdentifier != 0
+        int ret = primaryColorLightIdentifier != 0
                 ? overlayResLight.getColor(primaryColorLightIdentifier, null)
                 : defaultPrimaryColorLight;
+
+        Log.e(TAG, "loadPrimaryColorLight :" + Integer.toString(ret));
+
+        return ret;
     }
 
     int loadPrimaryColorDark(String overlayPackage)
@@ -321,9 +327,14 @@ class OverlayThemeExtractor {
                 ResourceConstants.PRIMARY_COLOR_DEFAULT_LIGHT_NAME,
                 "color", overlayPackage);
 
-        return primaryColorDarkIdentifier != 0
+        int ret = primaryColorDarkIdentifier != 0
                 ? overlayResDark.getColor(primaryColorDarkIdentifier, null)
                 : defaultPrimaryColorDark;
+
+
+        Log.e(TAG, "loadPrimaryColorDark :" + Integer.toString(ret));
+
+        return ret;
     }
 
     String loadString(String stringName, String packageName)
