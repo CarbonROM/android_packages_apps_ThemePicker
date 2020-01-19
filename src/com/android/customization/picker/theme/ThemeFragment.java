@@ -481,6 +481,9 @@ public class ThemeFragment extends ToolbarFragment {
                     }
                 });
             }
+            Log.e(TAG, theme.getTitle() + "COLORS: "
+                    + Integer.toString(previewInfo.colorPrimary) + " "
+                    + Integer.toString(previewInfo.colorSecondaryPrimary));
             if (previewInfo.colorPrimary != -1 && previewInfo.colorSecondaryPrimary != -1) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_primary,
                         R.drawable.ic_colorize_24px, R.layout.preview_card_primary_content,

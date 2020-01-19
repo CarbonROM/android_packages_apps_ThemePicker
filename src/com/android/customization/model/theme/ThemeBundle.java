@@ -423,11 +423,13 @@ public class ThemeBundle implements CustomizationOption<ThemeBundle> {
 
         public Builder setColorPrimary(@ColorInt int colorPrimary) {
             mColorPrimary = colorPrimary;
+            Log.e(TAG, "SETTING mColorPrimary to " + Integer.toString(mColorPrimary));
             return this;
         }
 
         public Builder setColorSecondaryPrimary(@ColorInt int colorSecondaryPrimary) {
             mColorSecondaryPrimary = colorSecondaryPrimary;
+            Log.e(TAG, "SETTING mColorSecondaryPrimary to " + Integer.toString(mColorSecondaryPrimary));
             return this;
         }
 
