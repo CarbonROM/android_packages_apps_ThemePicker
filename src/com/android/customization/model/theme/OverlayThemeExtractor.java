@@ -177,10 +177,7 @@ class OverlayThemeExtractor {
                             fontOverlayPackage))
                     .setHeadlineFontFamily(loadTypeface(
                             ResourceConstants.CONFIG_HEADLINE_FONT_FAMILY,
-                            fontOverlayPackage))
-                    .setFontName(mContext.getPackageManager()
-                        .getPackageInfo(fontOverlayPackage, 0)
-                        .applicationInfo.loadLabel(mContext.getPackageManager()).toString());
+                            fontOverlayPackage));
         } else {
             addSystemDefaultFont(builder);
         }
@@ -248,8 +245,7 @@ class OverlayThemeExtractor {
                 ResourceConstants.CONFIG_BODY_FONT_FAMILY,
                 "string", ResourceConstants.ANDROID_PACKAGE));
         builder.setHeadlineFontFamily(Typeface.create(headlineFontFamily, Typeface.NORMAL))
-                .setBodyFontFamily(Typeface.create(bodyFontFamily, Typeface.NORMAL))
-                .setFontName(mContext.getString(R.string.default_theme_title));
+                .setBodyFontFamily(Typeface.create(bodyFontFamily, Typeface.NORMAL));
     }
 
     Typeface loadTypeface(String configName, String fontOverlayPackage)
