@@ -398,19 +398,19 @@ public class ThemeFragment extends ToolbarFragment {
                     previewInfo.shapeAppIcons, editClickListener,
                     mColorButtonIds, mColorTileIds, mColorTileIconIds, mShapeIconIds,
                     wallpaperListener, coverCardLayoutListener));
-            addPage(new ThemePreviewPage(activity, R.string.preview_name_font, R.drawable.ic_font,
-                    R.layout.preview_card_font_content,
-                    previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
-                    previewInfo.resolveSecondaryPrimaryColor(res)) {
-                @Override
-                protected void bindBody(boolean forceRebind) {
-                    TextView title = card.findViewById(R.id.font_card_title);
-                    title.setTypeface(previewInfo.headlineFontFamily);
-                    TextView body = card.findViewById(R.id.font_card_body);
-                    body.setTypeface(previewInfo.bodyFontFamily);
-                    card.findViewById(R.id.font_card_divider).setBackgroundColor(accentColor);
-                }
-            });
+            // addPage(new ThemePreviewPage(activity, R.string.preview_name_font, R.drawable.ic_font,
+            //         R.layout.preview_card_font_content,
+            //         previewInfo.resolveAccentColor(res), previewInfo.resolvePrimaryColor(res),
+            //         previewInfo.resolveSecondaryPrimaryColor(res)) {
+            //     @Override
+            //     protected void bindBody(boolean forceRebind) {
+            //         TextView title = card.findViewById(R.id.font_card_title);
+            //         title.setTypeface(previewInfo.headlineFontFamily);
+            //         TextView body = card.findViewById(R.id.font_card_body);
+            //         body.setTypeface(previewInfo.bodyFontFamily);
+            //         card.findViewById(R.id.font_card_divider).setBackgroundColor(accentColor);
+            //     }
+            // });
             if (previewInfo.icons.size() >= mIconIds.length) {
                 addPage(new ThemePreviewPage(activity, R.string.preview_name_icon,
                         R.drawable.ic_wifi_24px, R.layout.preview_card_icon_content,

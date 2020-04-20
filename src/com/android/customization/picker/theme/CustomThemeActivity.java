@@ -161,12 +161,12 @@ public class CustomThemeActivity extends FragmentActivity implements
     private void initSteps(int currentStep) {
         mSteps = new ArrayList<>();
         OverlayManagerCompat manager = new OverlayManagerCompat(this);
-        mSteps.add(new FontStep(new FontOptionsProvider(this, manager), 0));
-        mSteps.add(new IconStep(new IconOptionsProvider(this, manager), 1));
-        mSteps.add(new ColorStep(new ColorOptionsProvider(this, manager, mCustomThemeManager), 2));
-        mSteps.add(new PrimaryStep(new PrimaryOptionsProvider(this, manager, mCustomThemeManager), 3));
-        mSteps.add(new ShapeStep(new ShapeOptionsProvider(this, manager), 4));
-        mSteps.add(new NameStep(5));
+        // mSteps.add(new FontStep(new FontOptionsProvider(this, manager), 0));
+        mSteps.add(new IconStep(new IconOptionsProvider(this, manager), 0));
+        mSteps.add(new ColorStep(new ColorOptionsProvider(this, manager, mCustomThemeManager), 1));
+        mSteps.add(new PrimaryStep(new PrimaryOptionsProvider(this, manager, mCustomThemeManager), 2));
+        mSteps.add(new ShapeStep(new ShapeOptionsProvider(this, manager), 3));
+        mSteps.add(new NameStep(4));
         mCurrentStep = currentStep;
     }
 
