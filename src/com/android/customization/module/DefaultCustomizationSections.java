@@ -8,8 +8,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.customization.model.color.ColorSectionController;
-import com.android.customization.model.font.FontManager;
-import com.android.customization.model.font.FontSectionController;
 import com.android.customization.model.grid.GridOptionsManager;
 import com.android.customization.model.grid.GridSectionController;
 import com.android.customization.model.iconpack.IconPackManager;
@@ -263,10 +261,6 @@ public final class DefaultCustomizationSections implements CustomizationSections
         // Icon pack selection section.
         sectionControllers.add(new IconPackSectionController(
                 IconPackManager.getInstance(activity, new OverlayManagerCompat(activity)), sectionNavigationController));
-
-        // Font selection section.
-        sectionControllers.add(new FontSectionController(
-                FontManager.getInstance(activity, new OverlayManagerCompat(activity)), sectionNavigationController));
 
         // Icon shape selection section.
         sectionControllers.add(new IconShapeSectionController(
